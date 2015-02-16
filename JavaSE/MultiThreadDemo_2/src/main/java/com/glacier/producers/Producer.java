@@ -36,7 +36,6 @@ public class Producer extends Thread {
             System.out.println( this.getProducer_name() + " - 生产了一个包子 【 " + baoZi.getIndex() + " 】");
             this.basket.addOne(baoZi);      //把包子放到篮子里去
             product_seq++;
-
             return baoZi;
         }
     }
@@ -51,7 +50,7 @@ public class Producer extends Thread {
                     break;
                 }
                 //每生产一个包子生产3s
-                Thread.sleep(3000);
+                Thread.sleep(5000);
             }catch (Exception e) {
                 e.printStackTrace();
             }
