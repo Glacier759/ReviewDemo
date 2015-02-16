@@ -23,6 +23,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="MultiThreadDemo" />
+        <module name="MultiThreadDemo_2" />
       </profile>
     </annotationProcessing>
   </component>

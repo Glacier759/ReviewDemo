@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JavaSE.iml" filepath="$PROJECT_DIR$/JavaSE.iml" />
       <module fileurl="file://$PROJECT_DIR$/MultiThreadDemo/MultiThreadDemo.iml" filepath="$PROJECT_DIR$/MultiThreadDemo/MultiThreadDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MultiThreadDemo_2/MultiThreadDemo_2.iml" filepath="$PROJECT_DIR$/MultiThreadDemo_2/MultiThreadDemo_2.iml" />
     </modules>
   </component>
 </project>
