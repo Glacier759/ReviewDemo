@@ -9,6 +9,7 @@
       <list>
         <option value="$PROJECT_DIR$/MultiThreadDemo/pom.xml" />
         <option value="$PROJECT_DIR$/MultiThreadDemo_2/pom.xml" />
+        <option value="$PROJECT_DIR$/DaemonThread/pom.xml" />
       </list>
     </option>
   </component>
