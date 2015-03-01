@@ -47,7 +47,7 @@ void	init_seqList( SeqList *L ) {
  */
 int insert_SeqList( SeqList *L, int i, ElemType x ) {
 	//在顺序表的第i个位置插入元素x
-	int i;
+	int j;
 	if ( L->length == MAXSIZE - 1 ) {
 		printf("表满");
 		return FALSE;						//表空间已慢，不能插入
@@ -109,7 +109,8 @@ int location_SeqList( SeqList *L, ElemType x ) {
  * 然后将为处理完的顺序表中的余下部分元素连在C的后面即可
  * */
 void merge_SeqList( SeqList *L1, SeqList *L2, SeqList *L3 ) {
-	int i = j = k = 1;
+	int i, j, k;
+	i = j = k = 1;
 
 	while( i <= L1->length && j <= L2->length ) {
 		if ( L1->elem[i] <= L2->elem[j] ) {
