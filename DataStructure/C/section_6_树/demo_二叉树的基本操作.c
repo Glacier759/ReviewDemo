@@ -31,7 +31,7 @@ typedef	struct node {
 }BiTree;
 
 typedef struct queueNode {
-	elemType			data;
+	BiTree				*treeNode;
 	struct queueNode	*next;
 }QueueNode;
 typedef	struct {
@@ -58,12 +58,16 @@ int		isEmpty_Queue( Queue *queue ) {
 	return false;
 }
 
-int		push_Queue( Queue *queue, elemType x ) {
+int		push_Queue( Queue *queue, BiTree *treeNode ) {
 	QueueNode	*node;
+
+	if ( !treeNode ) {
+		return false;
+	}
 
 	node = (QueueNode *)malloc(sizeof(QueueNode));
 	node->next = NULL;
-	node->data = x;
+	node->treeNode = treeNode;
 
 	node->next = queue->rear->next;
 	queue->rear = node;
@@ -71,13 +75,17 @@ int		push_Queue( Queue *queue, elemType x ) {
 	return true;
 }
 
-QueueNode	*pop_Queue( Queue *queue ) {
+BiTree	*pop_Queue( Queue *queue ) {
 	QueueNode	*node;
+
+	if ( isEmpty_Queue(queue) ) {
+		return NULL;
+	}
 
 	node = queue->front;
 	queue->front = node->next;
 
-	return node;
+	return node->treeNode;
 }
 
 BiTree	*create_BiTree() {		//先序创建二叉树
@@ -175,19 +183,67 @@ BiTree	*rightChild_BiTree( BiTree *biTree, BiTree *x ) {	//求x的右子树
 	return x->rChild;
 }
 
-/***********************************************************88*/
-void	layerOrder( BiTree *biTree ) {
+void	layerOrder( BiTree *biTree ) {	//按层次遍历
 	Queue	*queue = init_Queue();
 	BiTree	*temp;
 	
-	push_Queue( queue, biTree->data );
+	push_Queue( queue, biTree );
 	while( !isEmpty_Queue(queue) ) {
-
-		printf("%5c", value);
-		push_Queue()
+		BiTree *treeNode = pop_Queue( queue );
+		printf("%5c", treeNode->data);
+		push_Queue( queue, treeNode->lChild );
+		push_Queue( queue, treeNode->rChild );
 	}
 }
-/***********************************************************88*/
+
+/*****************************************************************************/
+int		leafCount( BiTree *biTree, int count ) {
+	if ( biTree ) {
+		if ( biTree->lChild == NULL && biTree->rChild == NULL ) {
+			count ++;
+		}
+		count = leafCount( biTree->lChild, count );
+		count = leafCount( biTree->rChild, count );
+	}
+	return count;
+}
+
+int		leafCount_BiTree( BiTree *biTree ) {	//统计二叉树叶子结点的个数
+	return leafCount( biTree, 0);
+}
+/*****************************************************************************/
+
+/*****************************************************************************/
+void	print_tree( BiTree *biTree, int level ) {
+	if ( biTree ) {
+		print_tree( biTree->rChild, level + 1 );
+
+		for ( int i = 0; i < level; i ++ ) {	//通过leve来控制输出的空格进而控制打印格式
+			printf("  ")
+		}
+		printf("%5c", biTree->data);
+
+		print_tree( biTree->lChild, level + 1 );
+	}
+}
+
+void	print_BiTree( BiTree *biTree ) {		//后中序遍历二叉树打印树状结构
+	print_tree( biTree, 1 );
+}
+/*****************************************************************************/
+
+void	swapChild_BiTree( BiTree *biTree ) {	//交换左右子树
+	BiTree	*temp;
+
+	if ( biTree ) {
+		swapChild_BiTree( biTree->lChild );
+		swapChild_BiTree( biTree->rChild );
+
+		temp = biTree->lChild;
+		biTree->lChild = biTree->rChild;
+		biTree->rChild = temp;
+	}
+}
 
 int main(int argc, char *argv[])
 {
@@ -200,6 +256,9 @@ int main(int argc, char *argv[])
 	printf("\n后序遍历二叉树: ");
 	postOrder( biTree );
 
+	printf("\n按层次遍历二叉树: ");
+	layerOrder( biTree );
+	getchar();
 
 	return EXIT_SUCCESS;
 }
