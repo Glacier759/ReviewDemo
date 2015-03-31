@@ -6,13 +6,14 @@ package com.glacier.pojos;
  * Company: Class 1204 of Computer Science and Technology
  */
 
+
 import java.util.LinkedList;
 
 /**
  * 包子的容器对象，负责包子的放入和拿出
  */
 public class Basket  {
-
+    Object object = new Object();
     public Basket(int index) {
         this.index = index;
         this.baoZiList = new LinkedList<BaoZi>();
