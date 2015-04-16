@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Created by IntelliJ IDEA on 2015-04-14 20:46.
@@ -18,6 +21,8 @@ public class Main {
         Main obj = new Main();
         obj.lambda_001();
         obj.lambda_002();
+        obj.lambda_003();
+        obj.lambda_004();
     }
 
     public void lambda_001() {
@@ -131,6 +136,68 @@ public class Main {
                  add(new Person("Evonne", "Shari", "PHP programmer", "female", 40, 1800));
              }
          };
+
+         //使用forEach语句与Lambda表达式输出集合内容
+         System.out.println("所有程序员的姓名");
+         javaProgrammers.forEach((programmer)-> System.out.printf("%s %s;\n", programmer.getFirstName(), programmer.getLastName()));
+         phpProgrammers.forEach((programmer)-> System.out.printf("%s %s;\n", programmer.getFirstName(), programmer.getLastName()));
+
+         //使用forEach语句与Lambda表达式增加程序员的工资5%
+         System.out.println("给程序员加薪 %5: ");
+         //暂时理解为为集合中是所有元素创建公式，通过后面的forEach语句遍历集合同时执行此操作
+         Consumer<Person> giveRaise = e -> e.setSalary(e.getSalary() / 100 * 5 + e.getSalary());    //java.util.function
+
+         System.out.println("加薪前");
+         javaProgrammers.forEach(System.out::println);  //执行操作
+         System.out.println("加薪后");
+         javaProgrammers.forEach(giveRaise);
+         javaProgrammers.forEach(System.out::println);
+         phpProgrammers.forEach(giveRaise);
+
+         //使用过滤器filter()显示月薪超过1400美元的PHP程序员
+         System.out.println("月薪超过1400美元的PHP程序员");
+         phpProgrammers.stream()
+                 .filter((p)->(p.getSalary() > 1400))
+                 .forEach(System.out::println);
+
+         //定义filters
+         //暂时理解为，Predicate为一个集合定义过滤器，要求这个集合中的所有元素满足后面lambda表达式的条件
+         //Predicate是一个接口，Java 8中接口允许实现，实现采用Lambda表达式，英文字面释义“断定为，断定性的”，此处理解为过滤器
+         //test方法通过传入一个过滤器泛型表示的对象，判断该对象是否满足当前过滤条件，如果满足则返回true
+         //and方法通过参数传入一个过滤器，要求结果同时满足两个过滤器
+         //negate方法相当于对过滤器进行了一次逻辑上的取反操作
+         //or方法通过参数传入一个过滤器，要求结果只要满足其一即可
+         Predicate<Person> ageFilter = (p) -> (p.getAge() > 25);
+         Predicate<Person> salaryFilter = (p) -> (p.getSalary() > 1400);
+         Predicate<Person> genderFilter = (p) -> ("female".equals(p.getGender()));
+
+         System.out.println("下面是年龄大于 24岁且月薪在$1400以上的女程序员：");
+         Stream<Person> streams = phpProgrammers.stream();
+         Stream<Person> streams_after_filter = streams.filter(ageFilter)
+                 .filter(salaryFilter)
+                 .filter(genderFilter);
+         streams_after_filter.forEach(System.out::println);
+
+         //重用filter
+         System.out.println("年龄大于 24岁的女性 Java programmers: ");
+         javaProgrammers.stream()
+                 .filter(ageFilter)
+                 .filter(genderFilter)
+                 .forEach(System.out::println);
+
+         //使用limit方法，可以限制结果集的个数
+         System.out.println("最前面的三个Java Programmers");
+         javaProgrammers.stream()
+                 .limit(3)
+                 .forEach(System.out::println);
+         System.out.println("最前面的三个女性Java Programmers： ");
+         javaProgrammers.stream()
+                 .filter(genderFilter)
+                 .limit(3)
+                 .forEach(System.out::println);
+
+         //使用stream进行排序
+         System.out.println("根据name排序，并显示前5个Java Programmers：");
      }
 
  }
