@@ -2,12 +2,11 @@ package com.glacier.lambda;
 
 import com.glacier.lambda.pojo.Person;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import javax.sound.midi.Soundbank;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -23,6 +22,7 @@ public class Main {
         obj.lambda_002();
         obj.lambda_003();
         obj.lambda_004();
+        obj.lambda_005();
     }
 
     public void lambda_001() {
@@ -198,6 +198,60 @@ public class Main {
 
          //使用stream进行排序
          System.out.println("根据name排序，并显示前5个Java Programmers：");
+         List<Person> sortedJavaProgrammers = javaProgrammers.stream()
+                                                            .filter(ageFilter)
+                                                            .filter(genderFilter)
+                                                            .sorted((p1, p2) -> (p1.getFirstName().compareTo(p2.getFirstName())))   //按照名字进行排序
+                                                            .sorted((p1, p2) -> (p1.getSalary() - p2.getSalary()))                  //按照工资进行排序
+                                                            .limit(5)
+                                                            .collect(Collectors.toList());
+         //不够五个时输出满足条件的所有
+         sortedJavaProgrammers.forEach(System.out::println);
+
+         //如果我们只对最低和最高薪水感兴趣，比排序后选择第一第二更快的是min和max方法：
+         System.out.println("工资最低的Java Programmer：");
+         Person person_min = javaProgrammers.stream().min((p1, p2) -> (p1.getSalary() - p2.getSalary())).get();
+         System.out.println(person_min);
+         System.out.println("工资最高的Java Programmer：");
+         Person person_max = javaProgrammers.stream().max((p1, p2) -> (p1.getSalary() - p2.getSalary())).get();
+         System.out.println(person_max);
+
+         //结合map方法，可以使用collect方法来将结果集放到一个字符串，一个Set或一个TreeSet中
+         System.out.println("将PHP programmers 的 first name 拼接成字符串：");
+         String phpDevelopers = phpProgrammers.stream()
+                                            .map(Person::getFirstName)
+                                            .collect(Collectors.joining(";"));  //在进一步的操作中可以作为标记（token）
+         System.out.println(phpDevelopers);
+
+         System.out.println("将Java programmers 的 first name 存放到Set：");
+         Set<String> javaDeveloperSet = javaProgrammers.stream()
+                                            .map(Person::getFirstName)
+                                            .collect(Collectors.toSet());
+         javaDeveloperSet.forEach(System.out::println);
+
+
+         //Stream还可以是并行的（parallel）的
+         System.out.println("计算付给 Java Programmers 的所有money：");
+         double totalMoney = javaProgrammers.parallelStream()
+                                        .mapToDouble((p) -> p.getSalary())
+                                        .sum();
+         System.out.println(totalMoney);
      }
+
+    public void lambda_005() {
+        //我们可以使用summaryStatistics方法获得Stream中元素的汇总数据。然后我们可以访问这些方法，比如：
+        //getMax，getMin，getSum，getAverage
+        System.out.println("计算count，min，max，sum，and average for numbers");
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 12);
+
+        IntSummaryStatistics stats = numbers.stream()
+                                            .mapToInt((x) -> x)
+                                            .summaryStatistics();
+        System.out.println("List中最大数：" + stats.getMax());
+        System.out.println("List中最小数：" + stats.getMin());
+        System.out.println("所有数字总和：" + stats.getSum());
+        System.out.println("所有数字的平均值：" + stats.getAverage());
+        System.out.println("List的元素个数：" + stats.getCount());
+    }
 
  }
