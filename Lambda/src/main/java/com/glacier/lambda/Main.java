@@ -2,7 +2,6 @@ package com.glacier.lambda;
 
 import com.glacier.lambda.pojo.Person;
 
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -147,10 +146,17 @@ public class Main {
          //暂时理解为为集合中是所有元素创建公式，通过后面的forEach语句遍历集合同时执行此操作
          Consumer<Person> giveRaise = e -> e.setSalary(e.getSalary() / 100 * 5 + e.getSalary());    //java.util.function
 
+         Consumer<Person> giveRaisea = new Consumer<Person>() {
+             @Override
+             public void accept(Person person) {
+                 person.setSalary(person.getSalary() / 100 * 5 + person.getSalary());
+             }
+         };
+
          System.out.println("加薪前");
          javaProgrammers.forEach(System.out::println);  //执行操作
          System.out.println("加薪后");
-         javaProgrammers.forEach(giveRaise);
+         javaProgrammers.forEach(giveRaisea);
          javaProgrammers.forEach(System.out::println);
          phpProgrammers.forEach(giveRaise);
 
@@ -170,6 +176,14 @@ public class Main {
          Predicate<Person> ageFilter = (p) -> (p.getAge() > 25);
          Predicate<Person> salaryFilter = (p) -> (p.getSalary() > 1400);
          Predicate<Person> genderFilter = (p) -> ("female".equals(p.getGender()));
+
+         Predicate<Person> age_filter = new Predicate<Person>() {
+             @Override
+             public boolean test(Person person) {
+                 if ()
+                 return false;
+             }
+         }
 
          System.out.println("下面是年龄大于 24岁且月薪在$1400以上的女程序员：");
          Stream<Person> streams = phpProgrammers.stream();
@@ -240,7 +254,7 @@ public class Main {
 
     public void lambda_005() {
         //我们可以使用summaryStatistics方法获得Stream中元素的汇总数据。然后我们可以访问这些方法，比如：
-        //getMax，getMin，getSum，getAverage
+        //getMax，getMin，getSum，getAverage，getCount
         System.out.println("计算count，min，max，sum，and average for numbers");
         List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 12);
 

@@ -1,0 +1,58 @@
+1. Stream:
+	Stream是对集合的包装，通常和Lambda一起使用。
+	使用Lambdas可以支持许多操作，比如：map，filter，limit，sorter，count，min，max，sum，collect等等
+	同样，Stream使用“懒运算”，它们并不会真正的读取所有数据，遇到像getFirst()这样的方法就会结束链式语法。
+
+Consumer:
+	使用Lambda表达式对所有元素的某一值进行批量操作，使用Consumer<T>为集合中的所有元素创建公式。
+	Consumer<Person> giveRaise = e -> e.setSalary(e.getSalary() / 100 * 5 + e.getSalary());		//创建公式
+	javaProgrammer_list.forEach(giveRaise);		//forEach意为遍历所有元素，并对所有元素执行giveRaise中设置的操作
+	源码：
+	public interface Consumer<T> {
+
+		//Consumer<T> consumer = e -> e.setXXX(xx);
+		//以上Lambda表达式相当于实现了accept方法，执行了t.setXXX(xx);
+		void accept( T t );		//定义集合中对象所要进行的操作。
+		
+		//嵌套执行指定操作，执行了某一操作后还需要进行下一个操作
+		default Consumer<T> andThen( Consumer<? super T> after ) {
+			Object.requireNonNull( after );
+			return (T t) -> { accept(t); after.accept(t); };
+		}
+	}
+
+Predicate:
+	结合Stream中的方法filter方法，方法参数为Predicate的实例化对象
+	Predicate<Person> ageFilter = (person) -> (person.getAge() > 25);	//定义一个过滤器，其后Lambda表达式为过滤条件
+	javaProgrammer_list.stream().filter(ageFilter)	//通过filter方法使用过滤器
+	源码：
+	public interface Predicate<T> {
+
+		//Predicate<T> predicate = p -> (p.getAge() > 20);
+		//以上Lambda表达式相当于实现了test方法，相当于比较器中的compare方法
+		//相当于如果t.getAge() > 20条件满足，则返回true
+		boolean test(T t);
+
+		//参数为另一个过滤器，返回同时满足两组条件的过滤器
+		default Predicate<T> and(Predicate<? super T> other) {
+			Objects.requireNonNull(other);
+			return (t) -> test(t) && other.test(t);
+		}
+
+		//返回与其逻辑相反的过滤器
+		default Predicate<T> negate() {
+			return (t) -> !test(t);
+		}
+
+		//参数为另一个过滤器，返回逻辑上满足两者条件之一即可的过滤器
+		default Predicate<T> or(Predicate<? super T> other) {
+			Objects.requireNonNull(other);
+			return (t) -> test(t) || other.test(t);
+		}
+
+		static <T> Predicate<T> isEqual(Object targetRef) {
+			return (null == targetRef) ? Object::isNull : object -> targetRef.equals(object);
+		}
+	}	
+
+
