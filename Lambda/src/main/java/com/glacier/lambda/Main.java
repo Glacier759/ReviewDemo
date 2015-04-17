@@ -4,6 +4,7 @@ import com.glacier.lambda.pojo.Person;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -61,7 +62,7 @@ public class Main {
         Runnable runnable_1 = new Runnable() {
             @Override
             public void run() {
-                System.out.println("Hello World !");;
+                System.out.println("Hello World !");
             }
         };
 
@@ -180,10 +181,9 @@ public class Main {
          Predicate<Person> age_filter = new Predicate<Person>() {
              @Override
              public boolean test(Person person) {
-                 if ()
                  return false;
              }
-         }
+         };
 
          System.out.println("下面是年龄大于 24岁且月薪在$1400以上的女程序员：");
          Stream<Person> streams = phpProgrammers.stream();
@@ -232,9 +232,17 @@ public class Main {
 
          //结合map方法，可以使用collect方法来将结果集放到一个字符串，一个Set或一个TreeSet中
          System.out.println("将PHP programmers 的 first name 拼接成字符串：");
+
          String phpDevelopers = phpProgrammers.stream()
-                                            .map(Person::getFirstName)
+                 .map(new Function<Person, String>() {
+                     @Override
+                     public String apply(Person person) {
+                         return person.getFirstName();
+                     }
+                 })
+                                            //.map(Person::getFirstName)
                                             .collect(Collectors.joining(";"));  //在进一步的操作中可以作为标记（token）
+
          System.out.println(phpDevelopers);
 
          System.out.println("将Java programmers 的 first name 存放到Set：");
@@ -247,9 +255,13 @@ public class Main {
          //Stream还可以是并行的（parallel）的
          System.out.println("计算付给 Java Programmers 的所有money：");
          double totalMoney = javaProgrammers.parallelStream()
-                                        .mapToDouble((p) -> p.getSalary())
+//                                        .mapToDouble((p) -> p.getSalary())
+                                        .mapToDouble(Person::getSalary)
                                         .sum();
          System.out.println(totalMoney);
+
+         System.out.println("flat before Elsdon");
+
      }
 
     public void lambda_005() {
