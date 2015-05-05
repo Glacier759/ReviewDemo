@@ -40,11 +40,12 @@ int		distance(char *base_str, int base_str_length, char *to_str, int to_str_leng
 	}
 	//否则，如原字符串与目标字符串长度均不为0
 	else if ( base_str_length >= 1 && to_str_length >= 1 ) {
-		//计算得到原字串的缺1位子串到目标字串的最小编辑距离+1
+		//计算得到原字串的缺1位子串到目标字串的最小编辑距离+1，对应了编辑操作的删除操作
 		int distance_1 = distance( base_str, base_str_length - 1, to_str, to_str_length ) + 1;
-		//计算得到原字串到目标字串的缺1位子串的最小编辑距离+1
+		//计算得到原字串到目标字串的缺1位子串的最小编辑距离+1，对应了斌及操作的插入操作
 		int distance_2 = distance( base_str, base_str_length, to_str, to_str_length - 1 ) + 1;
 		//计算两个字串缺1位子串的最小编辑距离+l；l表示两个字符串的末尾字符是否相等，相等则返回0，不等则返回1
+		//对应了编辑操作的修改操作
 		int distance_3 = distance( base_str, base_str_length - 1, to_str, to_str_length - 1 )
 			+ ( *(base_str + base_str_length - 1) == *(to_str + to_str_length - 1) ? 0 : 1 );
 		//取得三个距离中的最小值返回
@@ -68,10 +69,9 @@ int main(int argc, char *argv[])
 	FILE *fp = fopen(filename, "r");
 
 	memset(base_str, '\0', LINE_SIZE);
-	fgets(base_str, LINE_SIZE, fp);
-
+	fscanf(fp, "%s\n", base_str);
 	memset(to_str, '\0', LINE_SIZE);
-	fgets(to_str, LINE_SIZE, fp);
+	fscanf(fp, "%s\n", to_str);
 
 	int base_str_length = strlen(base_str);
 	int to_str_length = strlen(to_str);
